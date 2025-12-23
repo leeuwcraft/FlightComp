@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bx0v775cqvbaa"]
+
+[ext_resource type="Script" uid="uid://dorhpcimlrn7m" path="res://scripts/Menu box.gd" id="1_5p8wc"]
+[ext_resource type="Script" uid="uid://cb5vjj5mf3r0g" path="res://settings.gd" id="1_r6d6q"]
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_r6d6q")
+
+[node name="Node2D" type="Node2D" parent="."]
+script = ExtResource("1_5p8wc")

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1vvwqaoiu3ye"]
+
+[ext_resource type="Script" uid="uid://b6uvvtdsp1dkn" path="res://scripts/artificial_horizon.gd" id="1_oraiv"]
+[ext_resource type="Script" uid="uid://dorhpcimlrn7m" path="res://scenes/Menu box.gd" id="2_wwhlv"]
+
+[node name="artificial horizon" type="Node2D"]
+script = ExtResource("1_oraiv")
+
+[node name="Menubox" type="CanvasLayer" parent="."]
+script = ExtResource("2_wwhlv")

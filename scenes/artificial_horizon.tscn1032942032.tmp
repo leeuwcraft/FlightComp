@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1vvwqaoiu3ye"]
+
+[ext_resource type="Script" uid="uid://b333wyu4xlf63" path="res://scenes/artificial_horizonV2.gd" id="1_oraiv"]
+
+[node name="artificial horizon" type="Node2D"]
+script = ExtResource("1_oraiv")

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctpc73kpo2kdf"]
+
+[ext_resource type="Script" uid="uid://cltaxhfc3or7h" path="res://scripts/debug.gd" id="1_lgrwq"]
+[ext_resource type="Script" uid="uid://dorhpcimlrn7m" path="res://scripts/Menu box.gd" id="2_4pmxj"]
+
+[node name="Debug" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lgrwq")
+
+[node name="Node2D" type="Node2D" parent="."]
+script = ExtResource("2_4pmxj")
