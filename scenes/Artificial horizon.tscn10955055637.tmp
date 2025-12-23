@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b1vvwqaoiu3ye"]
+[gd_scene load_steps=5 format=3 uid="uid://b1vvwqaoiu3ye"]
 
 [ext_resource type="Script" uid="uid://b6uvvtdsp1dkn" path="res://scripts/artificial_horizon.gd" id="1_oraiv"]
 [ext_resource type="Curve" uid="uid://bbm6mw6w7ssoj" path="res://curves/defaultAirspeed.tres" id="2_2su31"]
@@ -6,19 +6,13 @@
 
 [sub_resource type="Curve" id="Curve_2su31"]
 _limits = [0.0, 180.0, 0.0, 1000.0]
-_data = [Vector2(0, 0), 0.0, 0.17999999, 0, 1, Vector2(1000, 180), 0.17999999, nan, 1, 1]
-point_count = 2
-
-[sub_resource type="Curve" id="Curve_2mueu"]
-_limits = [0.0, 180.0, -5.0, 5.0]
-_data = [Vector2(-5, 0), 0.0, 18.0, 0, 1, Vector2(5, 180), 18.0, 0.0, 1, 0]
-point_count = 2
+_data = [Vector2(0, 0), 0.0, 0.17999999, 0, 1, Vector2(1000, 180), 0.17999999, inf, 1, 1, Vector2(1000, 0), inf, nan, 1, 1, Vector2(1000, 0), nan, 0.0, 1, 0]
+point_count = 4
 
 [node name="artificial horizon" type="Node2D"]
 script = ExtResource("1_oraiv")
 AirspeedNeedle = ExtResource("2_2su31")
 AltimeterNeedle = SubResource("Curve_2su31")
-VarioNeedle = SubResource("Curve_2mueu")
 
 [node name="Node2D" type="Node2D" parent="."]
 script = ExtResource("2_wwhlv")

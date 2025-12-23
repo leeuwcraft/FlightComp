@@ -13,11 +13,13 @@ var HorizonButton = Button.new()
 var MapButton = Button.new()
 
 func _init() -> void:
+	
 	home.text = "HOME"
 	home.custom_minimum_size = Vector2(Global.DisplaySize.x/8, Global.DisplaySize.y/16)
 	home.pressed.connect(GotoHome.bind())
 	
 func GotoHome():
+	Global.playSound(load("res://sounds/ui-sounds-pack-5-2-359749.mp3"), 1)
 	get_tree().change_scene_to_file("res://scenes/main menu.tscn")
 
 func UpdatePackedArrays():

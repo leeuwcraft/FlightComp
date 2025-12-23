@@ -22,7 +22,7 @@ var Aircraft_texture_small = ImageTexture.create_from_image(Aircraft_texture)
 #files
 
 #XplaneUDP variables
-var UPDConnection = false
+var UDPConnection = false
 var XPlaneUPDConnection = false
 var CondorUDPConnection = false
 
@@ -61,6 +61,15 @@ var background_transparent = Color(0.1, 0.1, 0.1, 0.4)
 
 var draw_requests = []
 
+@onready var audioDriver = AudioStreamPlayer.new()
+
+func playSound(sound: AudioStreamMP3, volume : float):
+	if !audioDriver.is_playing():
+		audioDriver.volume_linear = volume
+		audioDriver.stream = sound
+		audioDriver.play()
+	
+
 func CalculateDistance(delta):
 	var latT = deg_to_rad(6.216981358384821)
 	var lonT = deg_to_rad(51.36342429859314)
@@ -88,19 +97,21 @@ func CalculateVario(delta):
 
 func UpdateCalculations(delta):
 	#in flight calculations
-	CalculateVario(delta)
+	if not UDPConnection:
+		CalculateVario(delta)
 	CalculateDistance(delta)
 
 func decodeCondorPacket(packet: PackedByteArray):
 	var packetDecoded = packet.get_string_from_utf8()
 	var lines := packetDecoded.split("\n", false)
+	
 	for line in lines:
 		if line.contains("airspeed"):
 			airspeedKMH = 3.6 * line.split("=", false, 2)[1].to_float()
 			airspeedKTS = 3.6 * line.split("=", false, 2)[1].to_float() * 0.539956803
 		if line.contains("altitude"):
 			altitudeM = line.split("=", false, 2)[1].to_float()
-		if line.contains("evario"):
+		if line.contains("evario="):
 			TEVario = line.split("=", false, 2)[1].to_float()
 		if line.contains("gforce="):
 			g_force = line.split("=", false, 2)[1].to_float()
@@ -108,8 +119,6 @@ func decodeCondorPacket(packet: PackedByteArray):
 			heading = rad_to_deg(line.split("=", false, 2)[1].to_float())
 		if line.contains("pitch="):
 			pitch = rad_to_deg(line.split("=", false, 2)[1].to_float())
-		if line.contains("bank="):
-			roll = -rad_to_deg(line.split("=", false, 2)[1].to_float())
 		if line.contains("bank="):
 			roll = -rad_to_deg(line.split("=", false, 2)[1].to_float())
 	
@@ -152,6 +161,7 @@ func decodeXplanePacket(packet: PackedByteArray):
 			altitudeM = val2 * 0.3048
 
 func _ready():
+	add_child(audioDriver)
 	var os_name = OS.get_name()
 	if os_name == "Android" or os_name == "iOS":
 		MobileMode = true
@@ -167,7 +177,8 @@ func _ready():
 		push_error("Failed to bind udp port")
 	else:
 		print("Listening for Condor on udp port 55278")
-		
+	playSound(load("res://sounds/sound effect (13).mp3"), 1)
+	
 func _process(delta: float) -> void:
 	DisplaySize = DisplayServer.window_get_size()
 	DisplayCenter = DisplayServer.window_get_size()/2
@@ -191,8 +202,10 @@ func _process(delta: float) -> void:
 			CondorUDPConnection = false
 	
 	if XPlaneUPDConnection or CondorUDPConnection:
-		UPDConnection = true
+		if not UDPConnection: 
+			playSound(load("res://sounds/sound effect (8).mp3"), 1)
+		UDPConnection = true
 	else:
-		UPDConnection = false
+		UDPConnection = false
 	
 	UpdateCalculations(delta)

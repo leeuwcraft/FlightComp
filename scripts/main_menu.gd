@@ -10,7 +10,7 @@ func _ready() -> void:
 	grid.add_theme_constant_override("v_separation", 10)
 	add_child(grid)
 	for i in buttoncount:
-		if i.split(".")[1] == "tscn" and i.split(".")[0] != "main menu":
+		if i.split(".")[1] == "tscn" and i.split(".")[0] != "main menu" and i.split(".")[0] != "splashscreen":
 			var button = Button.new()
 			button.custom_minimum_size = Vector2(Global.DisplaySize.x/3, Global.DisplaySize.y/8)
 			button.text = i.split(".")[0]
@@ -19,8 +19,10 @@ func _ready() -> void:
 			grid.add_child(button)
 
 func _on_Button_pressed(scene_to_load):
+	Global.playSound(load("res://sounds/ui-sounds-pack-5-2-359749.mp3") ,1)
 	get_tree().change_scene_to_file("res://scenes/" + scene_to_load + ".tscn")
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	$TextureRect.size = Global.DisplaySize
 	pass

@@ -15,6 +15,7 @@ var headingDeg = 0
 
 @export var AirspeedNeedle : Curve
 @export var AltimeterNeedle : Curve
+@export var VarioNeedle : Curve
 
 #zero p1 & p2
 var p1 = Vector2(0,0)
@@ -47,7 +48,7 @@ func DrawingComponents():
 	# get the heading and accel data and compensate for pitch
 	var east = accelSmoothed.normalized().cross(magSmoothed).normalized()
 	var north = east.cross(accelSmoothed.normalized()).normalized()
-	if not Global.UPDConnection:
+	if not Global.UDPConnection:
 		headingRad = atan2(north.x, -east.x)
 		headingDeg = rad_to_deg(headingRad)
 	
@@ -73,14 +74,18 @@ func DrawingComponents():
 	draw_polyline(BracketRight, Global.white_color, 3)
 
 	#** S P E E D  &  A L T I T U D E **
-	var radiusVar =  Global.DisplayCenter.y/2 
+	var radiusVar =  Global.DisplayCenter.x*0.6
 	var incrementLines1 = 25+1 #increments in 10km/h
 	var incrementLines2 = 100 
 	var AirspeedTextInterval = 1 #to add interval between text
 	var AltimeterTextInterval = 10
 	
-	var needle1Angle = 180 - AirspeedNeedle.sample(Global.airspeedKMH) - 90
-	var needle2Angle = AltimeterNeedle.sample(Global.altitudeM) + 90
+	var thousands = 0
+	for i in Global.altitudeM/1000 - 1:
+		thousands = thousands + 1000
+	var needleAirspeedAngle = 180 - AirspeedNeedle.sample(Global.airspeedKMH) - 90
+	var needleAltimeterAngle = AltimeterNeedle.sample(Global.altitudeM - thousands) + 90
+	var needleVarioAngle = VarioNeedle.sample(Global.TEVario) + 90
 	
 	draw_circle(Vector2(0, Global.DisplayCenter.y), radiusVar, Global.background_transparent)
 	draw_circle(Vector2(Global.DisplaySize.x, Global.DisplayCenter.y), radiusVar, Global.background_transparent)
@@ -96,8 +101,8 @@ func DrawingComponents():
 		var pos1 = Vector2(0 + cos(deg_to_rad(angle))*(radiusVar-pos1Offset), Global.DisplayCenter.y + sin(deg_to_rad(angle))*(radiusVar-pos1Offset))
 		var pos2 = Vector2(0 + cos(deg_to_rad(angle))*(radiusVar-pos2Offset), Global.DisplayCenter.y + sin(deg_to_rad(angle))*(radiusVar-pos2Offset))
 		var pos3 = Vector2(0 + cos(deg_to_rad(angle))*(radiusVar-pos3Offset), Global.DisplayCenter.y + sin(deg_to_rad(angle))*(radiusVar-pos3Offset))
-		var pos4 = Vector2(0 + cos(deg_to_rad(needle1Angle))*(radiusVar-pos4Offset), Global.DisplayCenter.y + sin(deg_to_rad(needle1Angle))*(radiusVar-pos4Offset))
-		var pos5 = Vector2(0 + cos(deg_to_rad(needle1Angle))*(radiusVar-pos5Offset), Global.DisplayCenter.y + sin(deg_to_rad(needle1Angle))*(radiusVar-pos5Offset))
+		var pos4 = Vector2(0 + cos(deg_to_rad(needleAirspeedAngle))*(radiusVar-pos4Offset), Global.DisplayCenter.y + sin(deg_to_rad(needleAirspeedAngle))*(radiusVar-pos4Offset))
+		var pos5 = Vector2(0 + cos(deg_to_rad(needleAirspeedAngle))*(radiusVar-pos5Offset), Global.DisplayCenter.y + sin(deg_to_rad(needleAirspeedAngle))*(radiusVar-pos5Offset))
 		draw_line(pos1, pos2 , Global.white_color, 2) #increment line
 		if i%AirspeedTextInterval == 0:
 			draw_string(Global.default_font, Vector2(pos3.x-10,pos3.y+10), str(i*10), 0, -1) #text 
@@ -112,19 +117,25 @@ func DrawingComponents():
 		var pos3Offset = 15
 		var pos4Offset = 120
 		var pos5Offset = 35
+		var pos6Offset = 0
+		var pos7Offset = -20
 		var angle = AltimeterNeedle.sample(i*10) + 90
 		var pos1 = Vector2(Global.DisplaySize.x + cos(deg_to_rad(angle))*(radiusVar-pos1Offset), Global.DisplayCenter.y + sin(deg_to_rad(angle))*(radiusVar-pos1Offset))
 		var pos2 = Vector2(Global.DisplaySize.x + cos(deg_to_rad(angle))*(radiusVar-pos2Offset), Global.DisplayCenter.y + sin(deg_to_rad(angle))*(radiusVar-pos2Offset))
 		var pos3 = Vector2(Global.DisplaySize.x + cos(deg_to_rad(angle))*(radiusVar-pos3Offset), Global.DisplayCenter.y + sin(deg_to_rad(angle))*(radiusVar-pos3Offset))
-		var pos4 = Vector2(Global.DisplaySize.x  + cos(deg_to_rad(needle2Angle))*(radiusVar-pos4Offset), Global.DisplayCenter.y + sin(deg_to_rad(needle2Angle))*(radiusVar-pos4Offset))
-		var pos5 = Vector2(Global.DisplaySize.x  + cos(deg_to_rad(needle2Angle))*(radiusVar-pos5Offset), Global.DisplayCenter.y + sin(deg_to_rad(needle2Angle))*(radiusVar-pos5Offset))
+		var pos4 = Vector2(Global.DisplaySize.x  + cos(deg_to_rad(needleAltimeterAngle))*(radiusVar-pos4Offset), Global.DisplayCenter.y + sin(deg_to_rad(needleAltimeterAngle))*(radiusVar-pos4Offset))
+		var pos5 = Vector2(Global.DisplaySize.x  + cos(deg_to_rad(needleAltimeterAngle))*(radiusVar-pos5Offset), Global.DisplayCenter.y + sin(deg_to_rad(needleAltimeterAngle))*(radiusVar-pos5Offset))
+		var pos6 = Vector2(Global.DisplaySize.x  + cos(deg_to_rad(needleVarioAngle))*(radiusVar-pos6Offset), Global.DisplayCenter.y + sin(deg_to_rad(needleVarioAngle))*(radiusVar-pos6Offset))
+		var pos7 = Vector2(Global.DisplaySize.x  + cos(deg_to_rad(needleVarioAngle))*(radiusVar-pos7Offset), Global.DisplayCenter.y + sin(deg_to_rad(needleVarioAngle))*(radiusVar-pos7Offset))
 		draw_line(pos1, pos2 , Global.white_color, 2) #increment line
 		
 		if i%AltimeterTextInterval == 0:
 			draw_string(Global.default_font, Vector2(pos3.x-10,pos3.y+10), str(i*10), 0, -1) #text 
 		if i == 0: #only draw once
 			draw_line(pos5, pos4 , Global.white_color, 5) #needle
-			draw_string(Global.default_font, Vector2(Global.DisplaySize.x-100, Global.DisplayCenter.y), str(int(Global.altitudeM))+"M", 0, -1, 30)
+			draw_line(pos6, pos7 , Global.orange, 10) #needle
+			draw_string(Global.default_font, Vector2(Global.DisplaySize.x-130, Global.DisplayCenter.y - 30), str(int(Global.altitudeM))+"M", 0, -1, 30)
+			draw_string(Global.default_font, Vector2(Global.DisplaySize.x-150, Global.DisplayCenter.y + 30), str(floor(Global.TEVario * 100)/100)+"M/s", 0, -1, 30)
 			
 	#** H E A D I N G  I N D I C A T O R **
 	var box = HeadingBox.new()
@@ -212,11 +223,6 @@ func updatePackedArrays():
 		Vector2(box.Xpos-box.width/2, box.Ypos-box.size+box.spacing),
 		Vector2(box.Xpos-box.width/2, box.Ypos+box.spacing),
 	])
-	VarioNeedle = PackedVector2Array([
-		Vector2(0, 0),
-		Vector2(100, 50),
-		Vector2(100, 0),
-	])
 
 #colors in autoload
 
@@ -244,14 +250,13 @@ var GroundColor : PackedVector2Array
 var SkyColor : PackedVector2Array
 var box = HeadingBox.new()
 var HeadingBoxOutline : PackedVector2Array
-var VarioNeedle : PackedVector2Array
 
 func _process(delta):
 	centerInt = DisplayServer.window_get_size()/2
 	center = Vector2(centerInt.x, centerInt.y)
 	mag = Input.get_magnetometer()
 	accel = Input.get_accelerometer() # write input
-	if Global.UPDConnection == true:
+	if Global.UDPConnection == true:
 		pitch = deg_to_rad(Global.pitch)
 		roll = deg_to_rad(360-Global.roll+180)
 		headingDeg = Global.heading
