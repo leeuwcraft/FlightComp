@@ -6,7 +6,8 @@ AHRS Artificial horizon System, Built on IMU or UPD data from Condor or Xplane
 
 I work on this project in my free time, The goal is to create an flight computer for gliding and maybe also for other purpoces. As of right now i've got a simple artificial horizon and map system set up
 
-**Connecting to a simualtor**
+**Connecting to a simulator**
+
 Xplane: 
 launch the simulator in flight and go to the data tab, select the port 49003 and local ip 127.0.0.1
 
