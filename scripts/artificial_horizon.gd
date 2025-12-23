@@ -81,7 +81,6 @@ func DrawingComponents():
 	
 	var needle1Angle = 180 - AirspeedNeedle.sample(Global.airspeedKMH) - 90
 	var needle2Angle = AltimeterNeedle.sample(Global.altitudeM) + 90
-	print(AltimeterNeedle.sample(Global.altitudeM))
 	
 	draw_circle(Vector2(0, Global.DisplayCenter.y), radiusVar, Global.background_transparent)
 	draw_circle(Vector2(Global.DisplaySize.x, Global.DisplayCenter.y), radiusVar, Global.background_transparent)

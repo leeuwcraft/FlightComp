@@ -91,10 +91,28 @@ func UpdateCalculations(delta):
 	CalculateVario(delta)
 	CalculateDistance(delta)
 
-
 func decodeCondorPacket(packet: PackedByteArray):
-	var packetDecoded = packet.get_string_from_ascii()
-		
+	var packetDecoded = packet.get_string_from_utf8()
+	var lines := packetDecoded.split("\n", false)
+	for line in lines:
+		if line.contains("airspeed"):
+			airspeedKMH = 3.6 * line.split("=", false, 2)[1].to_float()
+			airspeedKTS = 3.6 * line.split("=", false, 2)[1].to_float() * 0.539956803
+		if line.contains("altitude"):
+			altitudeM = line.split("=", false, 2)[1].to_float()
+		if line.contains("evario"):
+			TEVario = line.split("=", false, 2)[1].to_float()
+		if line.contains("gforce="):
+			g_force = line.split("=", false, 2)[1].to_float()
+		if line.contains("yaw="):
+			heading = rad_to_deg(line.split("=", false, 2)[1].to_float())
+		if line.contains("pitch="):
+			pitch = rad_to_deg(line.split("=", false, 2)[1].to_float())
+		if line.contains("bank="):
+			roll = -rad_to_deg(line.split("=", false, 2)[1].to_float())
+		if line.contains("bank="):
+			roll = -rad_to_deg(line.split("=", false, 2)[1].to_float())
+	
 func decodeXplanePacket(packet: PackedByteArray):
 	#get header and verify DATA line
 	var header = packet.slice(0,4).get_string_from_utf8()
