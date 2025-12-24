@@ -1,7 +1,7 @@
 
 extends Node2D
 
-var API_KEY = "66c8d31c358d30243938288b135d13eb"
+var API_KEY = "ENTER API KEY HERE"
 var loadingscreen = true
 var Zoom : float = 2
 var X = 0
